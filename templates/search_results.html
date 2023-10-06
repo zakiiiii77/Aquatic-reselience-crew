@@ -1,0 +1,11 @@
+<h1>Search Results</h1>
+
+<ul>
+  {% for app1 in object_list %}
+    <a href="{% url 'art2' %}">
+      <li>
+        {{ nasaa.Article_number }}) {{ nasaa.Article_name }}
+      </li>
+    </a>
+  {% endfor %}
+</ul>
