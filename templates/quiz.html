@@ -1,0 +1,247 @@
+<html>
+    <head>
+        <link rel="stylesheet" href= "style.css">
+        <title> Quiz App</title>
+        <style>
+            * {
+    margin: 0;
+    padding: 0 ;
+    font-family: 'poppins' , sans-serif;
+    box-sizing: border-box;
+}
+
+body{
+    background: #001e4d;
+}
+.app {
+    background: #fff;
+    width: 90%;
+    max-width: 600px;
+    margin: 100px auto 0;
+    border-radius: 10px;
+    padding: 30px;
+
+}
+.app h1{
+    font-size: 25px;
+    color: #001e4d;
+    border-bottom: 1px solid #333;
+    padding-bottom: 30px;
+}
+.quiz {
+    padding: 20px 0;
+}
+.quiz h2{
+    font-size: 18px;
+    color: #001e4d;
+    font-weight: 600;
+}
+.btn {
+    background: #fff;
+    color: #222;
+    font-weight: 500;
+    width: 100%;
+    border: 1px solid #222;
+    padding: 10px;
+    margin: 10px 0;
+    text-align: left;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+.btn:hover:not([disabled]){
+    background: #222;
+    color: #fff;
+}
+.btn:disabled{
+    cursor: no-drop;
+}
+#next-btn{
+    background: #001e4d;
+    color: #fff;
+    font-weight: 500;
+    width: 150px;
+    border: 0;
+    padding: 10px;
+    margin: 20px auto 0;
+    border-radius: 4px;
+    cursor: pointer;
+    display: none;
+}
+.correct {
+    background: #9aeabc;
+}
+.incorrect {
+    background: #ff9393;
+}
+#certificate {
+    padding: 20px;
+    margin-top: 20px;
+    border: 2px solid green;
+    background-color: #f9f9f9;
+    color: green;
+    font-size: 20px;
+    text-align: center;
+}
+
+        </style>
+    </head>
+    <body>
+        <div class="app">
+            <h1> Quiz</h1>
+            <div class="quiz">
+                <h2 id="question"> Question 1</h2>
+                <div id="answer-buttons">
+                    <button class="btn"> Answer 1</button>
+                    <button class="btn"> Answer 2</button>
+                    <button class="btn"> Answer 3</button>
+                    <button class="btn"> Answer 4</button>
+                </div>
+                <button id="next-btn">Next</button>
+            </div>
+            <!-- Certificate div -->
+            <div id="certificate" style="display: none;">
+                Congratulations! You have passed the quiz. Here is your certificate. <a href="https://drive.google.com/file/d/1C8Klb1LGwwAhsWPOT26PU_F3sOpFUZu3/view?usp=sharing" target="_blank"> Click here to recieve your certificate!</a>
+            </div>
+        </div>
+        <script>
+            const questions = [
+    {
+        question: " What is the first step of the water cycle where water turns into tiny water drops in the sky?",
+        answers: [
+            { text: "Evaporation", correct: false},
+            { text: "Condensation", correct: true},
+            { text: "Precipitation", correct: false},
+            { text: "coagulation", correct: false},
+        ]
+    },
+    {
+        question: " When water turns into ice, what part of the water cycle is this?",
+        answers: [
+            { text: "Precipitation", correct: true},
+            { text: "Condensation", correct: false},
+            { text: "evaporation", correct: false},
+            { text: "coagulation", correct: false},
+        ]
+    },
+    {
+        question: " What do we call the tiny drops of water that form on the outside of a cold glass?",
+        answers: [
+            { text: "water drops", correct: false},
+            { text: "Snowflakes", correct: false},
+            { text: "Dewdrops", correct: true},
+            { text: "Condensation", correct: false},
+        ]
+    },
+    {
+        question: "  What happens when rain falls into a river and flows toward the ocean?",
+        answers: [
+            { text: "It magically disappears", correct: false},
+            { text: "It becomes part of the ocean and joins the water cycle again", correct: true},
+            { text: "It turns into clouds", correct: false},
+            { text: "it turns into vapor", correct: false},
+        ]
+    },
+    {
+    question: " . Which part of the water cycle is responsible for making clouds?",
+        answers: [
+            { text: "Evaporation", correct: false},
+            { text: "Condensation", correct: true},
+            { text: "Precipitation", correct: false},
+            { text: "coagulation", correct: false},
+        ]
+    },
+
+];
+const questionElement = document.getElementById("question");
+const answerButtons = document.getElementById("answer-buttons");
+const nextButton = document.getElementById("next-btn");
+
+let currentQuestionIndex = 0;
+let score = 0;
+function startQuiz(){
+    currentQuestionIndex = 0;
+    score = 0;
+    nextButton.innerHTML = "Next";
+    showQuestion();
+}
+function showQuestion(){
+    resetState();
+    let currentQuestion = questions[currentQuestionIndex];
+    let questionNo = currentQuestionIndex + 1;
+    questionElement.innerHTML = questionNo + ". " + currentQuestion.
+    question;
+
+    currentQuestion.answers.forEach(answer => {
+        const button = document.createElement("button");
+        button.innerHTML = answer.text;
+        button.classList.add("btn");
+        answerButtons.appendChild(button);
+        if(answer.correct){
+            button.dataset.correct = answer.correct;
+        }
+        button.addEventListener("click", selectAnswer)
+    });
+}
+
+function resetState(){
+    nextButton.style.display = "none";
+    while(answerButtons.firstChild){
+        answerButtons.removeChild(answerButtons.firstChild);
+    }
+    if (answerButtons !== null && answerButtons !== undefined) {
+        var firstChild = answerButtons.firstChild;
+
+    }
+
+}
+function selectAnswer(e){
+    const selectedBtn = e.target;
+    const isCorrect = selectedBtn.dataset.correct === "true";
+    if(isCorrect){
+        selectedBtn.classList.add("correct");
+        score++;
+    }else{
+        selectedBtn.classList.add("incorrect");
+    }
+    Array.from(answerButtons.children).forEach(button => {
+        if(button.dataset.correct === "true"){
+            button.classList.add("correct");
+        } button.disabled = true;
+    });
+    nextButton.style.display = "block";
+}
+function showScore(){
+    resetState();
+    questionElement.innerHTML = `You scored ${score} out of ${questions.length}! `;
+    nextButton.innerHTML = "Play Again";
+    nextButton.style.display = "block";
+    if (score > 1) {
+        document.getElementById('certificate').style.display = 'block';
+    }
+}
+
+function handleNextButton(){
+    currentQuestionIndex ++;
+    if(currentQuestionIndex < questions.length){
+
+        showQuestion();
+    }else {
+        showScore();
+    }
+}
+
+
+
+nextButton.addEventListener("click", ()=>{
+    if(currentQuestionIndex < questions.length){
+        handleNextButton();
+    }else{
+         startQuiz();
+    }
+})
+startQuiz();
+
+        </script>
+    </body>
+</html>
